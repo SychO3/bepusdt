@@ -15,6 +15,158 @@ import (
 	"github.com/v03413/bepusdt/app/web/epay"
 )
 
+type paymentPageMeta struct {
+	TokenSymbol  string
+	NetworkLabel string
+	NetworkFull  string
+	ForbidAsset  string
+}
+
+func getPaymentPageMeta(tradeType string) paymentPageMeta {
+	switch tradeType {
+	case model.OrderTradeTypeTronTrx:
+		return paymentPageMeta{
+			TokenSymbol:  "TRX",
+			NetworkLabel: "Tron",
+			NetworkFull:  "Tron",
+			ForbidAsset:  "USDT",
+		}
+	case model.OrderTradeTypeUsdtTrc20:
+		return paymentPageMeta{
+			TokenSymbol:  "USDT",
+			NetworkLabel: "TRC20",
+			NetworkFull:  "波场 (TRON) TRC20",
+			ForbidAsset:  "TRX",
+		}
+	case model.OrderTradeTypeUsdcTrc20:
+		return paymentPageMeta{
+			TokenSymbol:  "USDC",
+			NetworkLabel: "TRC20",
+			NetworkFull:  "波场 (TRON) TRC20",
+			ForbidAsset:  "TRX",
+		}
+	case model.OrderTradeTypeUsdtErc20:
+		return paymentPageMeta{
+			TokenSymbol:  "USDT",
+			NetworkLabel: "ERC20",
+			NetworkFull:  "以太坊 (Ethereum) ERC20",
+			ForbidAsset:  "ETH",
+		}
+	case model.OrderTradeTypeUsdcErc20:
+		return paymentPageMeta{
+			TokenSymbol:  "USDC",
+			NetworkLabel: "ERC20",
+			NetworkFull:  "以太坊 (Ethereum) ERC20",
+			ForbidAsset:  "ETH",
+		}
+	case model.OrderTradeTypeUsdtBep20:
+		return paymentPageMeta{
+			TokenSymbol:  "USDT",
+			NetworkLabel: "BEP20",
+			NetworkFull:  "币安智能链 (BSC) BEP20",
+			ForbidAsset:  "BNB",
+		}
+	case model.OrderTradeTypeUsdcBep20:
+		return paymentPageMeta{
+			TokenSymbol:  "USDC",
+			NetworkLabel: "BEP20",
+			NetworkFull:  "币安智能链 (BSC) BEP20",
+			ForbidAsset:  "BNB",
+		}
+	case model.OrderTradeTypeUsdtPolygon:
+		return paymentPageMeta{
+			TokenSymbol:  "USDT",
+			NetworkLabel: "Polygon",
+			NetworkFull:  "Polygon",
+			ForbidAsset:  "POL",
+		}
+	case model.OrderTradeTypeUsdcPolygon:
+		return paymentPageMeta{
+			TokenSymbol:  "USDC",
+			NetworkLabel: "Polygon",
+			NetworkFull:  "Polygon",
+			ForbidAsset:  "POL",
+		}
+	case model.OrderTradeTypeUsdtArbitrum:
+		return paymentPageMeta{
+			TokenSymbol:  "USDT",
+			NetworkLabel: "Arbitrum One",
+			NetworkFull:  "Arbitrum One",
+			ForbidAsset:  "ARB",
+		}
+	case model.OrderTradeTypeUsdcArbitrum:
+		return paymentPageMeta{
+			TokenSymbol:  "USDC",
+			NetworkLabel: "Arbitrum One",
+			NetworkFull:  "Arbitrum One",
+			ForbidAsset:  "ARB",
+		}
+	case model.OrderTradeTypeUsdtPlasma:
+		return paymentPageMeta{
+			TokenSymbol:  "USDT",
+			NetworkLabel: "Plasma",
+			NetworkFull:  "Plasma (XPL)",
+			ForbidAsset:  "XPL",
+		}
+	case model.OrderTradeTypeUsdtXlayer:
+		return paymentPageMeta{
+			TokenSymbol:  "USDT",
+			NetworkLabel: "X Layer",
+			NetworkFull:  "OKX (X Layer)",
+			ForbidAsset:  "OKB",
+		}
+	case model.OrderTradeTypeUsdcXlayer:
+		return paymentPageMeta{
+			TokenSymbol:  "USDC",
+			NetworkLabel: "X Layer",
+			NetworkFull:  "OKX (X Layer)",
+			ForbidAsset:  "OKB",
+		}
+	case model.OrderTradeTypeUsdcBase:
+		return paymentPageMeta{
+			TokenSymbol:  "USDC",
+			NetworkLabel: "Base",
+			NetworkFull:  "Base",
+			ForbidAsset:  "ETH",
+		}
+	case model.OrderTradeTypeUsdtSolana:
+		return paymentPageMeta{
+			TokenSymbol:  "USDT",
+			NetworkLabel: "Solana",
+			NetworkFull:  "Solana",
+			ForbidAsset:  "SOL",
+		}
+	case model.OrderTradeTypeUsdcSolana:
+		return paymentPageMeta{
+			TokenSymbol:  "USDC",
+			NetworkLabel: "Solana",
+			NetworkFull:  "Solana",
+			ForbidAsset:  "SOL",
+		}
+	case model.OrderTradeTypeUsdtAptos:
+		return paymentPageMeta{
+			TokenSymbol:  "USDT",
+			NetworkLabel: "Aptos",
+			NetworkFull:  "Aptos",
+			ForbidAsset:  "APT",
+		}
+	case model.OrderTradeTypeUsdcAptos:
+		return paymentPageMeta{
+			TokenSymbol:  "USDC",
+			NetworkLabel: "Aptos",
+			NetworkFull:  "Aptos",
+			ForbidAsset:  "APT",
+		}
+	default:
+		return paymentPageMeta{
+			TokenSymbol:  "USDT",
+			NetworkLabel: "TRC20",
+			NetworkFull:  "波场 (TRON) TRC20",
+			ForbidAsset:  "TRX",
+		}
+	}
+}
+
 func signVerify(ctx *gin.Context) {
 	rawData, err := ctx.GetRawData()
 	if err != nil {
@@ -184,7 +336,11 @@ func checkoutCounter(ctx *gin.Context) {
 		return
 	}
 
-	ctx.HTML(200, order.TradeType+".html", gin.H{
+	meta := getPaymentPageMeta(order.TradeType)
+	pageTitle := fmt.Sprintf("%s・%s 一款更好用的个人%s收款网关 BEpusdt",
+		meta.TokenSymbol, meta.NetworkLabel, meta.TokenSymbol)
+
+	ctx.HTML(200, "checkout.html", gin.H{
 		"http_host":  uri.Host,
 		"amount":     order.Amount,
 		"address":    order.Address,
@@ -194,6 +350,11 @@ func checkoutCounter(ctx *gin.Context) {
 		"trade_id":   tradeId,
 		"order_id":   order.OrderId,
 		"trade_type": order.TradeType,
+		"page_title": pageTitle,
+		"token_symbol":  meta.TokenSymbol,
+		"network_label": meta.NetworkLabel,
+		"network_full":  meta.NetworkFull,
+		"forbid_asset":  meta.ForbidAsset,
 	})
 }
 

@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.page_title}}</title>
+    <link rel="shortcut icon" href="/img/tether.svg">
+    <!-- 保留原有样式文件，主要视觉与 index.html 一致的部分在下方内联样式中定义 -->
+    <link rel="stylesheet" href="/css/usdt.min.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.qrcode_1.0.min.js"></script>
+    <script src="/js/usdt.min.js"></script>
+
+    <style>
+        :root {
+            --bg: #050509;
+            --bg-soft: rgba(18, 18, 28, 0.96);
+            --accent: #ff3366;
+            --accent-soft: rgba(255, 51, 102, 0.16);
+            --accent-weak: rgba(255, 51, 102, 0.05);
+            --text-main: #ffffff;
+            --text-sub: #9b9bb3;
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --radius-lg: 22px;
+            --radius-md: 16px;
+            --shadow-soft: 0 30px 80px rgba(0, 0, 0, 0.65);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(255, 51, 102, 0.2), transparent 55%),
+                radial-gradient(circle at bottom right, rgba(82, 91, 255, 0.26), transparent 55%),
+                #02030a;
+            color: var(--text-main);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .page {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 28px 16px 34px;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-mark {
+            width: 30px;
+            height: 30px;
+            border-radius: 999px;
+            background: radial-gradient(circle at 30% 20%, #ffffff, #ff3366 45%, #2c2f7a 100%);
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.09),
+                0 16px 30px rgba(0, 0, 0, 0.65);
+        }
+
+        .brand-text-main {
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+        }
+
+        .brand-text-sub {
+            font-size: 0.72rem;
+            color: var(--text-sub);
+            letter-spacing: .16em;
+            text-transform: uppercase;
+        }
+
+        .nav-pill {
+            padding: 6px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--text-sub);
+            font-size: 0.78rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(16px);
+            background: radial-gradient(circle at 0 0, rgba(255, 255, 255, 0.09), transparent 65%);
+        }
+
+        .nav-pill-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: #0ff19a;
+            box-shadow: 0 0 0 4px rgba(15, 241, 154, 0.2);
+        }
+
+        .checkout-main {
+            display: grid;
+            grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.9fr);
+            gap: 18px;
+            align-items: stretch;
+        }
+
+        .checkout-card {
+            background: linear-gradient(145deg, rgba(15, 15, 26, 0.96), rgba(10, 10, 21, 0.92));
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 20px 18px 18px;
+            box-shadow: var(--shadow-soft);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .checkout-card::before {
+            content: "";
+            position: absolute;
+            inset: -40%;
+            opacity: 0.05;
+            background:
+                radial-gradient(circle at 20% 0%, #ffffff, transparent 55%),
+                radial-gradient(circle at 80% 100%, #ff3366, transparent 60%);
+            mix-blend-mode: screen;
+            pointer-events: none;
+        }
+
+        .checkout-inner {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-tagline {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.78rem;
+            padding: 3px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: rgba(0, 0, 0, 0.35);
+            color: var(--text-sub);
+            margin-bottom: 12px;
+        }
+
+        .hero-tagline-pill {
+            padding: 2px 8px;
+            border-radius: 999px;
+            background: rgba(255, 51, 102, 0.12);
+            color: #ffd6e2;
+            font-size: 0.72rem;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+        }
+
+        .hero-title {
+            font-size: clamp(1.6rem, 2.2vw, 2rem);
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+
+        .hero-title span {
+            background: linear-gradient(120deg, #ffffff, #ff9fbf);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero-sub {
+            font-size: 0.9rem;
+            color: var(--text-sub);
+            line-height: 1.6;
+            margin-bottom: 14px;
+        }
+
+        .badge-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .badge {
+            padding: 3px 9px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            font-size: 0.78rem;
+            color: var(--text-sub);
+        }
+
+        .badge strong {
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        .order-layout {
+            margin-top: 4px;
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+            gap: 14px;
+            align-items: stretch;
+        }
+
+        .order-panel {
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: rgba(5, 5, 18, 0.9);
+            padding: 12px 12px 11px;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            gap: 6px;
+        }
+
+        .order-header-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .token-circle {
+            width: 24px;
+            height: 24px;
+            border-radius: 999px;
+            background: radial-gradient(circle at 30% 20%, #ffffff, #ff3366 45%, #2c2f7a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .token-labels {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .token-main {
+            font-size: 0.8rem;
+        }
+
+        .token-sub {
+            font-size: 0.74rem;
+            color: var(--text-sub);
+        }
+
+        .countdown-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 9px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: rgba(0, 0, 0, 0.5);
+            font-size: 0.78rem;
+        }
+
+        .countdown-chip-label {
+            color: var(--text-sub);
+        }
+
+        .countdown {
+            display: inline-flex;
+            align-items: baseline;
+            gap: 4px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .countdown span {
+            font-size: 0.92rem;
+        }
+
+        .countdown-unit {
+            font-size: 0.72rem;
+            color: var(--text-sub);
+        }
+
+        .order-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .order-label {
+            font-size: 0.78rem;
+            color: var(--text-sub);
+        }
+
+        .order-value {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .amount-highlight {
+            font-size: 1.05rem;
+        }
+
+        .order-row:last-of-type {
+            margin-bottom: 0;
+        }
+
+        .order-row-sub {
+            font-size: 0.74rem;
+            color: var(--text-sub);
+            margin-top: 4px;
+        }
+
+        .qr-panel {
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: radial-gradient(circle at top, rgba(255, 255, 255, 0.03), transparent 60%),
+                rgba(5, 5, 18, 0.98);
+            padding: 10px 10px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .qr-label {
+            font-size: 0.78rem;
+            color: var(--text-sub);
+        }
+
+        .qr-code {
+            width: 140px;
+            height: 140px;
+            background: radial-gradient(circle at 50% 0, rgba(255, 255, 255, 0.06), transparent 60%),
+                rgba(0, 0, 0, 0.85);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        .address-box {
+            width: 100%;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: rgba(0, 0, 0, 0.6);
+            padding: 7px 8px 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .address-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex: 1;
+        }
+
+        .address-label {
+            font-size: 0.76rem;
+            color: var(--text-sub);
+        }
+
+        .address-text {
+            font-size: 0.76rem;
+            word-break: break-all;
+        }
+
+        .copy-btn {
+            border-radius: 999px;
+            border: none;
+            background: linear-gradient(120deg, #ff3366, #ff7b9d);
+            color: #ffffff;
+            font-size: 0.78rem;
+            padding: 6px 10px;
+            cursor: pointer;
+            white-space: nowrap;
+            box-shadow: 0 8px 18px rgba(255, 51, 102, 0.5);
+            transition: transform 0.16s ease, box-shadow 0.16s ease;
+        }
+
+        .copy-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 22px rgba(255, 51, 102, 0.7);
+        }
+
+        .tips-card {
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: var(--bg-soft);
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.7);
+            padding: 16px 15px 14px;
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .tips-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .tips-title {
+            font-size: 0.86rem;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: var(--text-sub);
+        }
+
+        .tips-badge {
+            font-size: 0.74rem;
+            padding: 3px 8px;
+            border-radius: 999px;
+            background: var(--accent-soft);
+            color: #ffd6e2;
+        }
+
+        .tips-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 2px;
+        }
+
+        .tips-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+        }
+
+        .tips-dot {
+            margin-top: 4px;
+            width: 4px;
+            height: 4px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .tips-strong {
+            color: var(--text-main);
+        }
+
+        footer {
+            margin-top: 2px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            font-size: 0.75rem;
+            color: var(--text-sub);
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        footer span {
+            white-space: nowrap;
+        }
+
+        @media (max-width: 900px) {
+            .checkout-main {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .page {
+                padding-top: 20px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .page {
+                padding-inline: 14px;
+            }
+
+            .order-layout {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            footer {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+        <header class="nav">
+            <div class="brand">
+                <div class="brand-mark"></div>
+                <div>
+                    <div class="brand-text-main">USDT Gateway</div>
+                    <div class="brand-text-sub">CHECKOUT · PAYMENT MONITOR</div>
+                </div>
+            </div>
+            <div class="nav-pill">
+                <span class="nav-pill-dot"></span>
+                订单支付中 · 请按提示完成链上转账
+            </div>
+        </header>
+
+        <main class="checkout-main">
+            <section class="checkout-card" aria-label="支付详情">
+                <div class="checkout-inner">
+                    <div class="hero-tagline">
+                        <span class="hero-tagline-pill">{{.token_symbol}}</span>
+                        <span>网络：{{.network_label}} · 商户：{{.http_host}}</span>
+                    </div>
+
+                    <h1 class="hero-title">
+                        请向指定地址支付 <span>{{.amount}} {{.token_symbol}}</span>
+                    </h1>
+
+                    <p class="hero-sub">
+                        这是由商户 <strong>{{.http_host}}</strong> 发起的链上支付请求。请确认金额与收款网络无误，
+                        再使用钱包扫描二维码或复制地址进行转账。
+                    </p>
+
+                    <div class="badge-row">
+                        <div class="badge">
+                            <strong>{{.network_full}}</strong>&nbsp;网络
+                        </div>
+                        <div class="badge">
+                            订单号：<strong id="orderNumber">{{.order_id}}</strong>
+                        </div>
+                        <div class="badge">
+                            交易类型：<strong>{{.trade_type}}</strong>
+                        </div>
+                    </div>
+
+                    <div class="order-layout">
+                        <div class="order-panel">
+                            <div class="order-header">
+                                <div class="order-header-left">
+                                    <div class="token-circle">{{.token_symbol}}</div>
+                                    <div class="token-labels">
+                                        <div class="token-main">支付金额</div>
+                                        <div class="token-sub">请确保金额精确匹配</div>
+                                    </div>
+                                </div>
+                                <div class="countdown-chip">
+                                    <span class="countdown-chip-label">剩余时间</span>
+                                    <span class="countdown" id="countdown">
+                                        <span id="minutes">15</span><span class="countdown-unit">分</span>
+                                        <span>:</span>
+                                        <span id="seconds">00</span><span class="countdown-unit">秒</span>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="order-row">
+                                <span class="order-label">应付金额</span>
+                                <span class="order-value amount-highlight" id="payAmount">{{.amount}}
+                                    {{.token_symbol}}</span>
+                            </div>
+                            <div class="order-row">
+                                <span class="order-label">收款网络</span>
+                                <span class="order-value">{{.network_full}}</span>
+                            </div>
+                            <div class="order-row-sub">
+                                转账完成后系统会自动在链上监控确认，无需手动刷新。
+                            </div>
+                        </div>
+
+                        <div class="qr-panel">
+                            <div class="qr-label">使用钱包扫码支付</div>
+                            <div class="qr-code" id="qrcode"></div>
+
+                            <div class="address-box">
+                                <div class="address-meta">
+                                    <div class="address-label">收款地址 ({{.network_label}} 网络)</div>
+                                    <div class="address-text" id="walletAddress">{{.address}}</div>
+                                </div>
+                                <button class="copy-btn" type="button" onclick="copyAddress()">复制</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="tips-card" aria-label="支付说明与风险提示">
+                <div class="tips-header">
+                    <div class="tips-title">PAYMENT NOTES</div>
+                    <div class="tips-badge">请仔细核对后再支付</div>
+                </div>
+
+                <ul class="tips-list">
+                    <li>
+                        <span class="tips-dot"></span>
+                        <div>
+                            <span class="tips-strong">网络必须为 {{.network_label}}。</span>
+                            使用其它网络（例如转入 {{.forbid_asset}} 或错误链）将导致资金丢失且无法找回。
+                        </div>
+                    </li>
+                    <li>
+                        <span class="tips-dot"></span>
+                        <div>
+                            <span class="tips-strong">金额必须与页面显示完全一致。</span>
+                            包括小数位在内任意差异，都可能导致订单无法自动匹配。
+                        </div>
+                    </li>
+                    <li>
+                        <span class="tips-dot"></span>
+                        <div>
+                            订单超时后请勿继续付款，若已付款但状态异常，请联系商户 <strong>{{.http_host}}</strong> 处理。
+                        </div>
+                    </li>
+                    <li>
+                        <span class="tips-dot"></span>
+                        <div>
+                            系统通过区块链扫描确认到账，通常在数秒到数分钟内完成，具体取决于链上拥堵情况。
+                        </div>
+                    </li>
+                </ul>
+            </aside>
+        </main>
+
+        <footer>
+            <span>USDT 收款网关 · 自托管区块链收款基础设施</span>
+            <span>当前订单：{{.order_id}} · Trade ID：{{.trade_id}}</span>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            Payment.init({
+                expire: "{{.expire}}",
+                address: "{{.address}}",
+                trade_id: "{{.trade_id}}",
+                return_url: "{{.return_url}}"
+            });
+        });
+    </script>
+</body>
+
+</html>
