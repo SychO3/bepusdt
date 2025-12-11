@@ -226,9 +226,9 @@
         .order-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             margin-bottom: 8px;
-            gap: 6px;
+            gap: 10px;
         }
 
         .order-header-left {
@@ -264,19 +264,28 @@
             color: var(--text-sub);
         }
 
+        .countdown-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+
+        .countdown-label {
+            font-size: 0.76rem;
+            color: var(--text-sub);
+        }
+
         .countdown-chip {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 4px 9px;
+            justify-content: center;
+            min-width: 120px;
+            padding: 4px 10px;
             border-radius: 999px;
             border: 1px solid rgba(255, 255, 255, 0.18);
             background: rgba(0, 0, 0, 0.5);
             font-size: 0.78rem;
-        }
-
-        .countdown-chip-label {
-            color: var(--text-sub);
         }
 
         .countdown {
@@ -361,17 +370,11 @@
             border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, 0.18);
             background: rgba(0, 0, 0, 0.6);
-            padding: 7px 8px 6px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .address-meta {
+            padding: 8px 9px 8px;
             display: flex;
             flex-direction: column;
-            gap: 2px;
-            flex: 1;
+            align-items: stretch;
+            gap: 6px;
         }
 
         .address-label {
@@ -381,7 +384,26 @@
 
         .address-text {
             font-size: 0.76rem;
+            line-height: 1.4;
             word-break: break-all;
+            white-space: normal;
+            overflow: visible;
+            background: transparent;
+            border: none;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
+
+        .address-text::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .address-text::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.5);
+            border-radius: 999px;
+        }
+
+        .address-suffix {
+            color: #ff7b9d;
         }
 
         .copy-btn {
@@ -395,6 +417,7 @@
             white-space: nowrap;
             box-shadow: 0 8px 18px rgba(255, 51, 102, 0.5);
             transition: transform 0.16s ease, box-shadow 0.16s ease;
+            align-self: flex-end;
         }
 
         .copy-btn:hover {
@@ -478,6 +501,15 @@
             white-space: nowrap;
         }
 
+        .copyable {
+            cursor: pointer;
+            position: relative;
+        }
+
+        .copyable.copied {
+            color: #4ade80;
+        }
+
         @media (max-width: 900px) {
             .checkout-main {
                 grid-template-columns: minmax(0, 1fr);
@@ -559,20 +591,22 @@
                                         <div class="token-sub">请确保金额精确匹配</div>
                                     </div>
                                 </div>
-                                <div class="countdown-chip">
-                                    <span class="countdown-chip-label">剩余时间</span>
-                                    <span class="countdown" id="countdown">
-                                        <span id="minutes">15</span><span class="countdown-unit">分</span>
-                                        <span>:</span>
-                                        <span id="seconds">00</span><span class="countdown-unit">秒</span>
-                                    </span>
+                                <div class="countdown-wrap">
+                                    <div class="countdown-label">剩余时间</div>
+                                    <div class="countdown-chip">
+                                        <span class="countdown" id="countdown">
+                                            <span id="minutes">15</span><span class="countdown-unit">分</span>
+                                            <span>:</span>
+                                            <span id="seconds">00</span><span class="countdown-unit">秒</span>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="order-row">
                                 <span class="order-label">应付金额</span>
-                                <span class="order-value amount-highlight" id="payAmount">{{.amount}}
-                                    {{.token_symbol}}</span>
+                                <span class="order-value amount-highlight copyable" id="payAmount"
+                                    onclick="copyAmount()">{{.amount}} {{.token_symbol}}</span>
                             </div>
                             <div class="order-row">
                                 <span class="order-label">收款网络</span>
@@ -588,10 +622,8 @@
                             <div class="qr-code" id="qrcode"></div>
 
                             <div class="address-box">
-                                <div class="address-meta">
-                                    <div class="address-label">收款地址 ({{.network_label}} 网络)</div>
-                                    <div class="address-text" id="walletAddress">{{.address}}</div>
-                                </div>
+                                <div class="address-label">收款地址 ({{.network_label}} 网络)</div>
+                                <div class="address-text" id="walletAddress">{{.address}}</div>
                                 <button class="copy-btn" type="button" onclick="copyAddress()">复制</button>
                             </div>
                         </div>
@@ -650,6 +682,20 @@
                 trade_id: "{{.trade_id}}",
                 return_url: "{{.return_url}}"
             });
+
+            var addressEl = document.getElementById('walletAddress');
+            if (addressEl) {
+                var raw = (addressEl.textContent || '').trim();
+                if (raw.length > 0) {
+                    if (raw.length > 6) {
+                        var prefix = raw.slice(0, raw.length - 6);
+                        var suffix = raw.slice(-6);
+                        addressEl.innerHTML = prefix + '<span class="address-suffix">' + suffix + '</span>';
+                    } else {
+                        addressEl.textContent = raw;
+                    }
+                }
+            }
         });
     </script>
 </body>
