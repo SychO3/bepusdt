@@ -22,6 +22,10 @@ func Init() error {
 		bot.WithDefaultHandler(defaultHandle),
 	}
 
+	if conf.BotApiURL() != "" {
+		opts = append(opts, bot.WithServerURL(conf.BotApiURL()))
+	}
+
 	api, err = bot.New(conf.BotToken(), opts...)
 
 	return err

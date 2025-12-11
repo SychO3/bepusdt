@@ -58,3 +58,5 @@ admin_id = 123456
 group_id = ""
 # Telegram Bot Token，必须设置，否则无法使用；通过 @BotFather 创建机器人获取
 token = ""
+# Telegram Bot 自定义 HTTP 接口地址，可选，留空则使用官方接口 https://api.telegram.org
+api_url = ""

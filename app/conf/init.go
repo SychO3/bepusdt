@@ -193,6 +193,11 @@ func BotNotifyTarget() string {
 	return cast.ToString(cfg.Bot.AdminID)
 }
 
+func BotApiURL() string {
+
+	return strings.TrimSpace(cfg.Bot.ApiURL)
+}
+
 func GetWalletAddress() []string {
 
 	return cfg.Pay.WalletAddress
