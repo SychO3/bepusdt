@@ -520,7 +520,6 @@
         }
 
         .table-wrapper {
-            overflow-x: auto;
             border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             background: radial-gradient(circle at top, rgba(255, 255, 255, 0.03), transparent 60%),
@@ -530,7 +529,6 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 520px;
             font-size: 0.8rem;
         }
 
@@ -556,16 +554,28 @@
             background: rgba(0, 0, 0, 0.32);
         }
 
-        .token {
-            font-size: 0.78rem;
-            padding: 2px 8px;
-            border-radius: 999px;
-            border: 1px solid rgba(255, 255, 255, 0.16);
-            background: rgba(0, 0, 0, 0.4);
+        .support {
+            text-align: center;
+            font-size: 0.9rem;
+            white-space: nowrap;
         }
 
-        .token.off {
-            opacity: 0.45;
+        .support::before {
+            content: "✓";
+            color: #19e38a;
+            font-weight: 600;
+        }
+
+        .support.off::before {
+            content: "—";
+            color: var(--text-sub);
+            font-weight: 400;
+        }
+
+        .support.planned::before {
+            content: "•";
+            color: #ffb155;
+            font-weight: 700;
         }
 
         .muted {
@@ -808,68 +818,68 @@
                             <th>网络</th>
                             <th>USDT</th>
                             <th>USDC</th>
-                            <th>其它资产</th>
+                            <th>其它</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td>Tron</td>
-                            <td><span class="token">TRC20</span></td>
-                            <td><span class="token">TRC20</span></td>
-                            <td><span class="token">TRX（链上原生）</span></td>
+                            <td class="support"></td>
+                            <td class="support"></td>
+                            <td class="muted">TRX</td>
                         </tr>
                         <tr>
                             <td>Ethereum</td>
-                            <td><span class="token">ERC20 USDT</span></td>
-                            <td><span class="token">ERC20 USDC</span></td>
+                            <td class="support"></td>
+                            <td class="support"></td>
                             <td class="muted">—</td>
                         </tr>
                         <tr>
                             <td>Polygon</td>
-                            <td><span class="token">USDT</span></td>
-                            <td><span class="token">USDC</span></td>
+                            <td class="support"></td>
+                            <td class="support"></td>
                             <td class="muted">—</td>
                         </tr>
                         <tr>
                             <td>BSC</td>
-                            <td><span class="token">BEP20 USDT</span></td>
-                            <td><span class="token">BEP20 USDC</span></td>
+                            <td class="support"></td>
+                            <td class="support"></td>
                             <td class="muted">—</td>
                         </tr>
                         <tr>
                             <td>Aptos</td>
-                            <td><span class="token">USDT</span></td>
-                            <td><span class="token">USDC</span></td>
+                            <td class="support"></td>
+                            <td class="support"></td>
                             <td class="muted">—</td>
                         </tr>
                         <tr>
                             <td>Solana</td>
-                            <td><span class="token">USDT</span></td>
-                            <td><span class="token">USDC</span></td>
+                            <td class="support"></td>
+                            <td class="support"></td>
                             <td class="muted">—</td>
                         </tr>
                         <tr>
                             <td>X Layer</td>
-                            <td><span class="token">USDT</span></td>
-                            <td><span class="token">USDC</span></td>
+                            <td class="support"></td>
+                            <td class="support"></td>
                             <td class="muted">—</td>
                         </tr>
                         <tr>
                             <td>Arbitrum One</td>
-                            <td><span class="token">USDT</span></td>
-                            <td><span class="token">USDC</span></td>
+                            <td class="support"></td>
+                            <td class="support"></td>
                             <td class="muted">—</td>
                         </tr>
                         <tr>
                             <td>Plasma</td>
-                            <td><span class="token">USDT</span></td>
-                            <td><span class="token off">USDC（暂不支持）</span></td>
+                            <td class="support"></td>
+                            <td class="support off"></td>
                             <td class="muted">—</td>
                         </tr>
                         <tr>
                             <td>Base</td>
-                            <td><span class="token off">USDT（规划中）</span></td>
-                            <td><span class="token">USDC</span></td>
+                            <td class="support planned"></td>
+                            <td class="support"></td>
                             <td class="muted">—</td>
                         </tr>
                     </tbody>
